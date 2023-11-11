@@ -3,7 +3,9 @@ import { Entity, HasValue, Has, getComponentValue } from '@latticexyz/recs'
 import { useComponentValue, useEntityQuery } from "@latticexyz/react"
 import { useDojoComponents } from '../../DojoContext'
 import { bigintToEntity, bigintToHex } from "../utils/utils"
-import { Dir, TileType, tilemapToGameTilemap, offsetCoord } from "../utils/underdark"
+import { Dir, TileType, tilemapToGameTilemap, offsetCoord, coordToSlug } from "../utils/underdark"
+import { Account } from "starknet"
+import { getEntityIdFromKeys } from "../../utils/utils"
 
 
 //------------------
@@ -19,9 +21,9 @@ export const useAllChamberIds = () => {
   }
 }
 
-export const useGameChamberIds = (gameId: number) => {
+export const useGameChamberIds = (roomId: number) => {
   const { Chamber } = useDojoComponents()
-  const entityIds = useEntityQuery([HasValue(Chamber, { game_id: gameId })])
+  const entityIds = useEntityQuery([HasValue(Chamber, { room_id: roomId })])
   const chamberIds: bigint[] = useMemo(() => (entityIds ?? []).map((entityId) => BigInt(entityId)), [entityIds])
   return {
     chamberIds,
@@ -46,6 +48,7 @@ export const useChamber = (chamberId: bigint) => {
     domain_id: chamber?.domain_id ?? 0,
     token_id: chamber?.token_id ?? 0,
     yonder: chamber?.yonder ?? 0,
+    chamberExists: seed > 0,
   }
 }
 
@@ -71,7 +74,7 @@ export const useChamberMap = (locationId: bigint) => {
   // Parse tiles
   const tileIds: Entity[] = useEntityQuery([HasValue(Tile, { location_id: locationId ?? 0n })])
   const tiles: any[] = useMemo(() => tileIds.map((tileId) => getComponentValue(Tile, tileId)), [tileIds])
-  // useEffect(() => console.log(`tileIds:`, coordToSlug(locationId), tileIds), [tileIds])
+  // useEffect(() => console.log(`/tiles:`, coordToSlug(locationId), tileIds, tiles), [tileIds, tiles])
 
   //
   // Parse tilemap
@@ -80,10 +83,11 @@ export const useChamberMap = (locationId: bigint) => {
     if (bitmap && tiles.length > 0) {
       for (let i = 0; i < 256; ++i) {
         const bit = BigInt(255 - i)
-        const isPath = bitmap & (BigInt(1) << bit)
-        const isMonster = monsters & (BigInt(1) << bit)
-        const isSlenderDuck = slender_duck & (BigInt(1) << bit)
-        const isDarkTar = dark_tar & (BigInt(1) << bit)
+        const isPath = (bitmap & (1n << bit)) != 0n
+        const isMonster = (monsters & (1n << bit)) != 0n
+        const isSlenderDuck = (slender_duck & (1n << bit)) != 0n
+        const isDarkTar = (dark_tar & (1n << bit)) != 0n
+        // console.log(`GAMETILEMAP`, i, isPath, isMonster, isSlenderDuck, isDarkTar)
         if (isDarkTar) {
           result.push(TileType.DarkTar)
           // console.log(`++++++TileType.DarkTar`, bit)
@@ -130,3 +134,36 @@ export const useChamberState = (chamberId: bigint) => {
   const state: any = useComponentValue(State, bigintToEntity(chamberId))
   return state ?? {}
 }
+
+
+//---------------------
+// Scores
+//
+
+export const useLevelScores = (chamberId: bigint) => {
+  const { Score } = useDojoComponents()
+  const scoreKeys = useEntityQuery([HasValue(Score, { location_id: chamberId ?? 0n })])
+  // useEffect(() => console.log(`Level scores:`, coordToSlug(chamberId ?? 0n) , scoreKeys), [scoreKeys])
+  return {
+    scoreKeys,
+  }
+}
+
+export const useScoreByKey = (scoreKey: Entity) => {
+  const { Score } = useDojoComponents()
+  const score: any = useComponentValue(Score, scoreKey ?? '0' as Entity)
+  // useEffect(() => console.log(`Account score:`, coordToSlug(score?.location_id ?? 0n), score), [score])
+  return {
+    location_id: score?.location_id ?? 0n,
+    player: score?.player ?? 0n,
+    moves: score?.moves ?? 0,
+    levelIsCompleted: (score?.moves > 0),
+    scoreKey,
+  }
+}
+
+export const usePlayerScore = (chamberId: bigint, account: Account) => {
+  const key = useMemo(() => getEntityIdFromKeys([chamberId, BigInt(account.address)]), [chamberId, account])
+  return useScoreByKey(key)
+}
+

@@ -1,0 +1,283 @@
+
+$font-family: Menlo, monospace, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+$important: #fa0;
+// $ui-bg: #000a;
+$ui-color: #ddd;
+// $ui-border: 5px ridge $ui-color;
+$ui-border: 0.5px solid #444;
+
+$game-width: 960px;
+$game-height: 480px;
+$ui-height: 240px;
+$ui-compass-width: 360px;
+$ui-column: 60px;
+$ui-row: 40px;
+
+html {
+	overflow-y: scroll;
+	scroll-behavior: smooth;
+}
+
+html, body {
+  font-family: $font-family;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  transition: border-color 0.25s;
+  overflow: hidden;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+h1 {
+  font-size: 2.2em;
+  line-height: 0.5em;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: $font-family;
+}
+
+hr {
+  color: #444;
+  border: 0.5px solid;
+}
+
+button {
+  border-radius: 2px;
+  border: 1px solid transparent;
+  padding: 0.5em 1.0em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+canvas {
+  display: block;
+}
+
+/* GENERIC */
+
+.AlignLeft { text-align: left; }
+.AlignCenter { text-align: center; }
+.AlignRight { text-align: right; }
+.AlignTop { vertical-align: top; }
+.AlignMiddle { vertical-align: middle; }
+.AlignBottom { vertical-align: bottom; }
+
+.NoPadding { padding: 0!important; }
+.Padded { padding: 0.5em!important; }
+.NoMargin { margin: 0!important }
+.NoBorder { border: 0!important }
+.Block { display: inline-block; }
+
+.Anchor {
+  cursor: pointer;
+}
+
+.Spacer20 {
+  width: '100%';
+  min-height: 20px;
+}
+.Spacer50 {
+  width: '100%';
+  min-height: 50px;
+}
+
+
+.Relative {
+  position: relative;
+}
+
+.FillScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0008;
+}
+
+.FillParent {
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  vertical-align: middle;
+  align-items: center;
+}
+
+.CenteredContainer {
+	height: 100%;
+  min-height: 100%;
+	width: 100%;
+	display: flex !important;
+	justify-content: center;
+	align-items: center;
+	// text-align: center;
+}
+
+/* UNDERDARK  GENERIC */
+
+.DirectionButton {
+  /* margin: 0.25em; */
+  font-size: 24px;
+  text-align: center;
+  border: 0;
+  padding: 0;
+}
+
+.SmallButton {
+  margin: 0 0.1em;
+  padding: 0.1em 0.4em;
+}
+
+.Locked {
+  background-color: #94631f;
+}
+.Unlocked {
+  background-color: #fbf6c0;
+}
+
+/* GAME CANVAS */
+
+.GameView {
+  width: $game-width;
+  height: $game-height;
+  outline: 0.5px solid #444;
+}
+
+.GameCanvas {
+  width: $game-width;
+  height: $game-height;
+  display: block;
+  background-color: #0000;
+}
+
+
+/* GAME UI */
+
+.UI {
+  outline: $ui-border;
+  vertical-align: middle;
+  margin: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.GameUI {
+  @extend .UI;
+  display: block;
+  width: $game-width;
+  height: $ui-height;
+  outline: 0.5px solid #444;
+  border: 0;
+}
+
+.MapView {
+  width: $ui-height;
+  height: calc($ui-height - $ui-row);
+  background-color: #1b1b1b; //RealmsColors.BG
+}
+
+.RoomPanel {
+  @extend .MapView;
+  height: calc($ui-height - $ui-row - $ui-row);
+}
+
+.InfoPanel {
+  width: $ui-compass-width;
+  height: calc($ui-height - $ui-row);
+  background-color: #1b1b1b; //RealmsColors.BG
+}
+
+.CompassUI {
+  width: $ui-compass-width;
+  height: $ui-row;
+  font-size: 2.25em;
+  padding: 0.2em 0 0 0;
+}
+
+.RowUI{
+  width: 100%;
+  height: $ui-row;
+  max-height: $ui-row;
+}
+.ColUI{
+  width: $ui-column;
+  max-width: $ui-column;
+  height: 100%;
+  vertical-align: bottom;
+  margin: auto;
+}
+
+.ButtonUI{
+  font-size: 18px;
+}
+
+.InfoTop {
+  width: 100%;
+  height: $ui-row;
+  padding: 1em 0 0 0;
+  margin: auto;
+}
+.InfoBottom {
+  width: 80%;
+  height: calc($ui-height - $ui-row - $ui-row);
+  margin: auto;
+}
+
+
+/* TO BE REMOVED... */
+
+.ProofView {
+  position: absolute;
+  top: calc(100vw - 250px);
+  left: calc(100vh - 100px);
+  width: 500px;
+  height: 200px;
+  background-color: #242424;
+}
+

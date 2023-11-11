@@ -1,7 +1,8 @@
-import './index.css';
+import 'semantic-ui-css/semantic.min.css'
+import './index.scss';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import PlaytestPage from '../underdark/components/PlaytestPage';
+import PlaytestPage from '../underdark/components/editor/PlaytestPage';
 import { UnderdarkProvider } from '../underdark/hooks/UnderdarkContext'
 import { GameplayProvider } from '../underdark/hooks/GameplayContext'
 

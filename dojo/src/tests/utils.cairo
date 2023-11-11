@@ -14,6 +14,7 @@ mod utils {
     use underdark::types::location::{Location, LocationTrait};
     use underdark::types::dir::{Dir, DirTrait};
     use underdark::types::doors::{Doors};
+    use underdark::types::constants::{REALM_ID};
 
     fn setup_world() -> (IWorldDispatcher, IActionsDispatcher) {
         let mut models = array![chamber::TEST_CLASS_HASH, map::TEST_CLASS_HASH, tile::TEST_CLASS_HASH, state::TEST_CLASS_HASH, score::TEST_CLASS_HASH];
@@ -22,17 +23,17 @@ mod utils {
         (world, IActionsDispatcher { contract_address })
     }
 
-    fn execute_start_level(world: IWorldDispatcher, system: IActionsDispatcher, game_id: u32, level_number: u32, generator_name: felt252, generator_value: u32) {
-        system.start_level(game_id, level_number, 0x0, 0, generator_name, generator_value.into());
+    fn execute_generate_level(world: IWorldDispatcher, system: IActionsDispatcher, realm_id: u16, manor_coord: u128, room_id: u16, level_number: u16, generator_name: felt252, generator_value: u32) {
+        system.generate_level(realm_id, manor_coord, room_id, level_number, generator_name, generator_value.into());
     }
 
     fn execute_finish_level(world: IWorldDispatcher, system: IActionsDispatcher, location_id: u128, proof: u256, moves_count: usize) {
         system.finish_level(location_id, proof.low, proof.high, moves_count);
     }
 
-    fn start_level_get_chamber(world: IWorldDispatcher, system: IActionsDispatcher, game_id: u32, level_number: u32, generator_name: felt252, generator_value: u32) -> Chamber {
-        execute_start_level(world, system, game_id, level_number, generator_name, generator_value);
-        let location: Location = Location { game_id, over:0, under:1, north:0, east: level_number.try_into().unwrap(), west:0, south:1 };
+    fn generate_level_get_chamber(world: IWorldDispatcher, system: IActionsDispatcher, realm_id: u16, manor_coord: u128, room_id: u16, level_number: u16, generator_name: felt252, generator_value: u32) -> Chamber {
+        execute_generate_level(world, system, realm_id, manor_coord, room_id, level_number, generator_name, generator_value);
+        let location: Location = LocationTrait::from_coord(realm_id, room_id, level_number, manor_coord);
         get_world_Chamber(world, location.to_id())
     }
 
@@ -76,12 +77,30 @@ mod utils {
     }
 
     fn make_from_location() -> (Location, Dir, u128) {
-        let location: Location = Location{ game_id:1, over:0, under:0, north:1, east:1, west:0, south:0 };
+        let location: Location = Location{ realm_id:REALM_ID, room_id:1, over:0, under:0, north:1, east:1, west:0, south:0 };
         let location_id: u128 = location.to_id();
         let dir: Dir = Dir::Under;
         let to_location: Location = location.offset(dir);
         let to_location_id : u128 = to_location.to_id();
         (location, dir, to_location_id)
+    }
+
+    fn make_map(bitmap: u256, monsters: u256, slender_duck: u256, dark_tar: u256) -> Map {
+        Map {
+            entity_id: 1,
+            bitmap,
+            generator_name: 0,
+            generator_value: 0,
+            north: 0,
+            east: 0,
+            west: 0,
+            south: 0,
+            over: 0,
+            under: 0,
+            monsters,
+            slender_duck,
+            dark_tar,
+        }
     }
 
     #[test]

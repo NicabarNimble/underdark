@@ -9,7 +9,7 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          game_id: RecsType.Number,
+          room_id: RecsType.Number,
           level_number: RecsType.Number,
           seed: RecsType.BigInt,
           yonder: RecsType.Number,
@@ -17,7 +17,7 @@ export function defineContractComponents(world: World) {
         {
           metadata: {
             name: name,
-            types: ["u32","u32","u256","u16"],
+            types: ["u16","u16","u256","u16"],
           },
         }
       );
@@ -48,6 +48,23 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Score: (() => {
+      const name = "Score";
+      return defineComponent(
+        world,
+        {
+          location_id: RecsType.BigInt,
+          player: RecsType.BigInt,
+          moves: RecsType.Number,
+        },
+        {
+          metadata: {
+            name: name,
+            types: ["u128","ContractAddress","usize"],
+          },
+        }
+      );
+    })(),
     State: (() => {
       const name = "State";
       return defineComponent(
@@ -62,23 +79,6 @@ export function defineContractComponents(world: World) {
           metadata: {
             name: name,
             types: ["u8","u8","u8","u8"],
-          },
-        }
-      );
-    })(),
-    Score: (() => {
-      const name = "Score";
-      return defineComponent(
-        world,
-        {
-          location_id: RecsType.BigInt,
-          player: RecsType.BigInt,
-          moves: RecsType.Number,
-        },
-        {
-          metadata: {
-            name: name,
-            types: ["u128","ContractAddress","usize"],
           },
         }
       );

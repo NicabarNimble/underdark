@@ -1,8 +1,8 @@
 {
   "world": {
     "name": "world",
-    "address": "0x6150655e17345af3d45d23f9b1d04a4c5e485dfed5bf55cbd6f53063aaa42a",
-    "class_hash": "0x5179c281a8d3cca6cfb820201fa7a81150b56f9db492405a29e9564222370b8",
+    "address": "0x7006ea4fd2de52944def100605e48ba82b8c4d15a6bd5ef04fbc579d8b00076",
+    "class_hash": "0x6441e7fc96d795ec94fca66634e6d87edf84362e564ef80eb13f459914b8b",
     "abi": [
       {
         "type": "impl",
@@ -733,12 +733,14 @@
           }
         ]
       }
-    ]
+    ],
+    "reads": [],
+    "writes": []
   },
   "executor": {
     "name": "executor",
     "address": null,
-    "class_hash": "0x2b35dd4816731188ed1ad16caa73bde76075c9d9cb8cbfa3e447d3ab9b1ab33",
+    "class_hash": "0x54ee9d99457d82d53e21030920f7e6f43509b98ea62282b5c2520050264a28c",
     "abi": [
       {
         "type": "impl",
@@ -791,11 +793,13 @@
         "kind": "enum",
         "variants": []
       }
-    ]
+    ],
+    "reads": [],
+    "writes": []
   },
   "base": {
     "name": "base",
-    "class_hash": "0x7aec2b7d7064c1294a339cd90060331ff704ab573e4ee9a1b699be2215c11c9",
+    "class_hash": "0x5a2c567ed06c8059c8d1199684796a0a0ef614f9a2ab628700e804524816b5c",
     "abi": [
       {
         "type": "impl",
@@ -857,8 +861,8 @@
   "contracts": [
     {
       "name": "actions",
-      "address": "0x1ecc984f2f872bdadd43ab1762c87de3d445b8eb134e6b475f37f23e8a551a3",
-      "class_hash": "0x15309897b116112c1ee9021ca4632ec21c46d1cdc47e41e3d78deb4cf29ce13",
+      "address": "0x32361a725c7fba5d9265db4569942ce845145da695f54c05bea24eda993b1b3",
+      "class_hash": "0x9915e27cf2a48360619c26167857453d7ff7f3b0d1dd833de65bc7405aec48",
       "abi": [
         {
           "type": "impl",
@@ -894,23 +898,23 @@
           "items": [
             {
               "type": "function",
-              "name": "start_level",
+              "name": "generate_level",
               "inputs": [
                 {
-                  "name": "game_id",
-                  "type": "core::integer::u32"
+                  "name": "realm_id",
+                  "type": "core::integer::u16"
+                },
+                {
+                  "name": "manor_coord",
+                  "type": "core::integer::u128"
+                },
+                {
+                  "name": "room_id",
+                  "type": "core::integer::u16"
                 },
                 {
                   "name": "level_number",
-                  "type": "core::integer::u32"
-                },
-                {
-                  "name": "from_coord",
-                  "type": "core::integer::u128"
-                },
-                {
-                  "name": "from_dir_u128",
-                  "type": "core::integer::u128"
+                  "type": "core::integer::u16"
                 },
                 {
                   "name": "generator_name",
@@ -967,7 +971,9 @@
           "kind": "enum",
           "variants": []
         }
-      ]
+      ],
+      "reads": [],
+      "writes": []
     }
   ],
   "models": [
@@ -980,13 +986,13 @@
           "key": true
         },
         {
-          "name": "game_id",
-          "type": "u32",
+          "name": "room_id",
+          "type": "u16",
           "key": false
         },
         {
           "name": "level_number",
-          "type": "u32",
+          "type": "u16",
           "key": false
         },
         {
@@ -1000,7 +1006,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x643819e4d9d18621e5459560744d6769e8be264f60e4ec22412b689b4fd255b",
+      "class_hash": "0x48ca919b742316ff49720176ef303f7e9ac3ee28d3a510307675a2c6dc50eaa",
       "abi": [
         {
           "type": "function",
@@ -1232,7 +1238,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x64ea0296f7d02ac1677cefacd1db736e1ca0b8dae5ef7c9025fdbd78ae4c4fc",
+      "class_hash": "0x6915d3bc1c200b5a57738b60d06841170edf62ba9180f191ae186da49976e17",
       "abi": [
         {
           "type": "function",
@@ -1396,198 +1402,6 @@
       ]
     },
     {
-      "name": "State",
-      "members": [
-        {
-          "name": "location_id",
-          "type": "u128",
-          "key": true
-        },
-        {
-          "name": "light",
-          "type": "u8",
-          "key": false
-        },
-        {
-          "name": "threat",
-          "type": "u8",
-          "key": false
-        },
-        {
-          "name": "wealth",
-          "type": "u8",
-          "key": false
-        },
-        {
-          "name": "wins",
-          "type": "u8",
-          "key": false
-        }
-      ],
-      "class_hash": "0x163fafd056fe4f3f0e6434c5ee9644ca4807d7b6e6ca74e33fb5615611fc175",
-      "abi": [
-        {
-          "type": "function",
-          "name": "name",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::felt252"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "unpacked_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "function",
-          "name": "packed_size",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::integer::u32"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::integer::u8>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::integer::u8>"
-            }
-          ]
-        },
-        {
-          "type": "function",
-          "name": "layout",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "core::array::Span::<core::integer::u8>"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::felt252>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::felt252>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "dojo::database::schema::Struct",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "attrs",
-              "type": "core::array::Span::<core::felt252>"
-            },
-            {
-              "name": "children",
-              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
-          "members": [
-            {
-              "name": "snapshot",
-              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
-            }
-          ]
-        },
-        {
-          "type": "struct",
-          "name": "dojo::database::schema::Enum",
-          "members": [
-            {
-              "name": "name",
-              "type": "core::felt252"
-            },
-            {
-              "name": "attrs",
-              "type": "core::array::Span::<core::felt252>"
-            },
-            {
-              "name": "children",
-              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
-            }
-          ]
-        },
-        {
-          "type": "enum",
-          "name": "dojo::database::schema::Ty",
-          "variants": [
-            {
-              "name": "Primitive",
-              "type": "core::felt252"
-            },
-            {
-              "name": "Struct",
-              "type": "dojo::database::schema::Struct"
-            },
-            {
-              "name": "Enum",
-              "type": "dojo::database::schema::Enum"
-            },
-            {
-              "name": "Tuple",
-              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
-            }
-          ]
-        },
-        {
-          "type": "function",
-          "name": "schema",
-          "inputs": [],
-          "outputs": [
-            {
-              "type": "dojo::database::schema::Ty"
-            }
-          ],
-          "state_mutability": "view"
-        },
-        {
-          "type": "event",
-          "name": "underdark::models::chamber::state::Event",
-          "kind": "enum",
-          "variants": []
-        }
-      ]
-    },
-    {
       "name": "Score",
       "members": [
         {
@@ -1616,7 +1430,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x6751610d1577faa7e89ecd7f3306b4c50d4a2b860952d32f3f52fe0b1c12c1f",
+      "class_hash": "0x1bd994ff7b3649537c7dd17169087b22d8538a9469bcac9d94c110ec95d26f9",
       "abi": [
         {
           "type": "function",
@@ -1780,6 +1594,198 @@
       ]
     },
     {
+      "name": "State",
+      "members": [
+        {
+          "name": "location_id",
+          "type": "u128",
+          "key": true
+        },
+        {
+          "name": "light",
+          "type": "u8",
+          "key": false
+        },
+        {
+          "name": "threat",
+          "type": "u8",
+          "key": false
+        },
+        {
+          "name": "wealth",
+          "type": "u8",
+          "key": false
+        },
+        {
+          "name": "wins",
+          "type": "u8",
+          "key": false
+        }
+      ],
+      "class_hash": "0x2061a951c53c6cd0ce4720b3fed146aeb6512ebe2bc5ab2f49b8047017b616c",
+      "abi": [
+        {
+          "type": "function",
+          "name": "name",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::felt252"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "unpacked_size",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u32"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "packed_size",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::integer::u32"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::integer::u8>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::integer::u8>"
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "layout",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "core::array::Span::<core::integer::u8>"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::felt252>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::felt252>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<core::array::Span::<core::felt252>>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::schema::Struct",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>",
+          "members": [
+            {
+              "name": "snapshot",
+              "type": "@core::array::Array::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "struct",
+          "name": "dojo::database::schema::Enum",
+          "members": [
+            {
+              "name": "name",
+              "type": "core::felt252"
+            },
+            {
+              "name": "attrs",
+              "type": "core::array::Span::<core::felt252>"
+            },
+            {
+              "name": "children",
+              "type": "core::array::Span::<(core::felt252, core::array::Span::<core::felt252>)>"
+            }
+          ]
+        },
+        {
+          "type": "enum",
+          "name": "dojo::database::schema::Ty",
+          "variants": [
+            {
+              "name": "Primitive",
+              "type": "core::felt252"
+            },
+            {
+              "name": "Struct",
+              "type": "dojo::database::schema::Struct"
+            },
+            {
+              "name": "Enum",
+              "type": "dojo::database::schema::Enum"
+            },
+            {
+              "name": "Tuple",
+              "type": "core::array::Span::<core::array::Span::<core::felt252>>"
+            }
+          ]
+        },
+        {
+          "type": "function",
+          "name": "schema",
+          "inputs": [],
+          "outputs": [
+            {
+              "type": "dojo::database::schema::Ty"
+            }
+          ],
+          "state_mutability": "view"
+        },
+        {
+          "type": "event",
+          "name": "underdark::models::chamber::state::Event",
+          "kind": "enum",
+          "variants": []
+        }
+      ]
+    },
+    {
       "name": "Tile",
       "members": [
         {
@@ -1808,7 +1814,7 @@
           "key": false
         }
       ],
-      "class_hash": "0x80b8669ccfb85dda7499fa10378760aee6df5279978ea835e1642e7e742e67",
+      "class_hash": "0x64d4d4e5425dcf1a4fdfb66a001d9df414b3c02cb3ffac94e5c1ad5118b4fa2",
       "abi": [
         {
           "type": "function",

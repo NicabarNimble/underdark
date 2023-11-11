@@ -5,11 +5,11 @@ use underdark::types::dir::{Dir, DIR, DirTrait};
 // define the interface
 #[starknet::interface]
 trait IActions<TContractState> {
-    fn start_level(self: @TContractState,
-        game_id: u32,
-        level_number: u32,
-        from_coord: u128,
-        from_dir_u128: u128, 
+    fn generate_level(self: @TContractState,
+        realm_id: u16,
+        manor_coord: u128,
+        room_id: u16,
+        level_number: u16,
         generator_name: felt252,
         generator_value_u128: u128,
     );
@@ -35,25 +35,19 @@ mod actions {
     // impl: implement functions specified in trait
     #[external(v0)]
     impl ActionsImpl of IActions<ContractState> {
-        fn start_level(self: @ContractState,
-            game_id: u32,
-            level_number: u32,
-            from_coord: u128,
-            from_dir_u128: u128, 
+        fn generate_level(self: @ContractState,
+            realm_id: u16,
+            manor_coord: u128,
+            room_id: u16,
+            level_number: u16,
             generator_name: felt252,
             generator_value_u128: u128,
         ) {
             let world: IWorldDispatcher = self.world_dispatcher.read();
 
-            // verify its a valid direction
-            // let maybe_from_dir: Option<Dir> = from_dir_u128.try_into();
-            // let from_dir: Dir = maybe_from_dir.unwrap();
-            // assert(from_dir != Dir::Over, 'Invalid from direction (Over)');
-            // let from_location: Location = LocationTrait::from_coord(game_id, from_coord);
+            let location: Location = LocationTrait::from_coord(realm_id, room_id, level_number, manor_coord);
 
-            let location: Location = Location{ game_id, over:0, under:1, north: 0, east: level_number.try_into().unwrap(), west:0, south:1 };
-
-            generate_chamber(world, game_id, level_number, location, Dir::West, generator_name, generator_value_u128.try_into().unwrap());
+            generate_chamber(world, room_id, level_number, location, generator_name, generator_value_u128.try_into().unwrap());
 
             return ();
         }
@@ -65,13 +59,13 @@ mod actions {
             moves_count: usize,
         ) {
             let world: IWorldDispatcher = self.world_dispatcher.read();
-            let caller = starknet::contract_address_const::<0x0>();
+            let caller = starknet::get_caller_address();
 
             let proof = u256 {
                 low: proof_low,
                 high: proof_high,
             };
-            verify_level_proof(world, caller, location_id, proof, moves_count);
+            verify_level_proof(world, location_id, caller, proof, moves_count);
 
             return ();
         }

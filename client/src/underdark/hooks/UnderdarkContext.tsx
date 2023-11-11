@@ -9,7 +9,9 @@ import React, { ReactNode, createContext, useReducer, useContext } from 'react'
 // Constants
 //
 export const initialState = {
-  gameId: 1,
+  realmId: 5962,                        // Sissisnorsis
+  manorCoord: BigInt('0x39400000385'),  // Kurnkunor, S901,E916
+  roomId: 1,
   chamberId: 0n,
   // constants
   logo: '/pubic/logo.png',
@@ -24,10 +26,12 @@ const UnderdarkActions = {
 // Types
 //
 type UnderdarkStateType = {
-  gameId: number,
-  chamberId: bigint,
+  realmId: number
+  manorCoord: bigint
+  roomId: number
+  chamberId: bigint
   // constants
-  logo: string,
+  logo: string
 }
 
 type ActionType =
@@ -60,7 +64,7 @@ const UnderdarkProvider = ({
     let newState = { ...state }
     switch (action.type) {
       case UnderdarkActions.SET_GAME: {
-        newState.gameId = action.payload as number
+        newState.roomId = action.payload as number
         newState.chamberId = 0n
         break
       }
