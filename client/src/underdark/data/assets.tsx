@@ -21,7 +21,6 @@ interface ModelAsset {
   scale: number
   rotation: number[]
   object?: any
-  loaded?: boolean
 }
 type ModelAssets = {
   [key in ModelName]: ModelAsset
@@ -93,52 +92,52 @@ type AudioAssets = {
 
 let AUDIO_ASSETS: AudioAssets = {
   AMBIENT: {
-    path: '/audio/music-ambient.mp3',
+    path: '/audio/music-ambient.m4a',
     volume: 0.5,
     loop: true,
   },
   SLENDER_DUCK: {
-    path: '/audio/sfx/slenderduck.mp3',
+    path: '/audio/sfx/slenderduck.m4a',
     loop: true,
   },
   TORCH: {
-    path: '/audio/sfx/torch.mp3',
+    path: '/audio/sfx/torch.m4a',
     loop: true,
   },
   EXTINGUISH: {
-    path: '/audio/sfx/extinguish.mp3',
+    path: '/audio/sfx/extinguish.m4a',
     loop: false,
   },
   DARK_TAR: {
-    path: '/audio/sfx/darktar.mp3',
+    path: '/audio/sfx/darktar.m4a',
     loop: false,
   },
   STAIRS: {
-    path: '/audio/sfx/stairs.mp3',
+    path: '/audio/sfx/stairs.m4a',
     loop: false,
   },
   CHEST: {
-    path: '/audio/sfx/chest.mp3',
+    path: '/audio/sfx/chest.m4a',
     loop: false,
   },
   FOOT1: {
-    path: '/audio/sfx/foot1.mp3',
+    path: '/audio/sfx/foot1.m4a',
     loop: false,
   },
   FOOT2: {
-    path: '/audio/sfx/foot2.mp3',
+    path: '/audio/sfx/foot2.m4a',
     loop: false,
   },
   MONSTER_NEAR: {
-    path: '/audio/sfx/monster_near.mp3',
+    path: '/audio/sfx/monster_near.m4a',
     loop: false,
   },
   MONSTER_TOUCH: {
-    path: '/audio/sfx/monster_touch.mp3',
+    path: '/audio/sfx/monster_touch.m4a',
     loop: false,
   },
   MONSTER_HIT: {
-    path: '/audio/sfx/monster_hit.mp3',
+    path: '/audio/sfx/monster_hit.m4a',
     loop: false,
   },
 }
@@ -155,7 +154,6 @@ const _loader = async (ASSETS, onLoading) => {
     Object.keys(ASSETS).forEach((name) => {
       onLoading(name, (object) => {
         ASSETS[name].object = object
-        ASSETS[name].loaded = (object != null)
         if (--assetsToLoad == 0) {
           resolve()
         }
@@ -190,18 +188,22 @@ const _loadAudios = async (listener) => {
   const loader = new THREE.AudioLoader()
   return _loader(AUDIO_ASSETS, (name, resolve) => {
     const asset = AUDIO_ASSETS[name]
-    loader.load(asset.path, function (buffer) {
-      // load asset...
-      let audio = null
-      // console.log(`CACHED AUDIO [${name}]:`, buffer)
-      if (buffer) {
-        audio = new THREE.Audio(listener).setBuffer(buffer)
-        audio.setLoop(asset.loop ?? false)
-        audio.setVolume(asset.volume ?? 1.0)
-        audio.autoplay = false
-      }
-      resolve(audio)
-    })
+    try {
+      loader.load(asset.path, function (buffer) {
+        // load asset...
+        let audio = null
+        console.log(`CACHED AUDIO [${name}]:`, buffer)
+        if (buffer) {
+          audio = new THREE.Audio(listener).setBuffer(buffer)
+          audio.setLoop(asset.loop ?? false)
+          audio.setVolume(asset.volume ?? 1.0)
+          audio.autoplay = false
+        }
+        resolve(audio)
+      })
+      } catch(e) {
+        console.error(`CACHED AUDIO [${name}] FAILED!`, e)
+    }
   })
 }
 
@@ -210,24 +212,34 @@ const _loadAudios = async (listener) => {
 //----------------------------
 // Main Asset Loader
 //
-let _loadingAssets
-const loadAssets = async (cameraRig) => {
-  // create / return loading promise
+// assets that can be loaded when the page loads
+let _loadingAssets: boolean
+const loadAssets = async () => {
   if (_loadingAssets === undefined) {
-    // create audio listener
-    const listener = new THREE.AudioListener()
-    cameraRig.add(listener)
-    // load all assets...
     _loadingAssets = true
     await _loadModels()
-    // await _loadAudios(listener)
     _loadingAssets = false
   }
   return _loadingAssets
 }
+//
+// Audios need to be loaded after user interaction
+// call this from some button
+let _loadingAudioAssets: boolean
+const loadAudioAssets = async (cameraRig: any) => {
+  if (_loadingAudioAssets === undefined) {
+    _loadingAudioAssets = true
+    const listener = new THREE.AudioListener()
+    cameraRig.add(listener)
+    await _loadAudios(listener)
+    _loadingAudioAssets = false
+  }
+  return _loadingAudioAssets
+}
 
 export {
   loadAssets,
+  loadAudioAssets,
   ModelName,
   AudioName,
   MODELS_ASSETS,
